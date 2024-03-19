@@ -3,9 +3,11 @@ package com.merito.mymobileapplicationproject
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.merito.mymobileapplicationproject.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), TaskItemClickListener
+{
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var taskViewModel: TaskViewModel
@@ -16,13 +18,30 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         taskViewModel = ViewModelProvider(this).get(TaskViewModel::class.java)
         binding.newTaskButton.setOnClickListener {
-            NewTaskSheet().show(supportFragmentManager, "newTaskTag")
+            NewTaskSheet(null).show(supportFragmentManager, "newTaskTag")
         }
-        taskViewModel.name.observe(this) {
-            binding.taskName.text = String.format("Task name: %s", it)
-        }
-        taskViewModel.desc.observe(this) {
-            binding.taskDescription.text = String.format("Task Description: %s", it)
+        setRecyclerView()
+
+    }
+
+    private fun setRecyclerView()
+    {
+        val mainActivity = this
+        taskViewModel.taskItems.observe(this){
+            binding.todoListRecyclerView.apply {
+                layoutManager = LinearLayoutManager(applicationContext)
+                adapter = TaskItemAdapter(it, mainActivity)
+            }
         }
     }
+
+    override fun editTaskItem(taskItem: TaskItem) {
+        NewTaskSheet(taskItem).show(supportFragmentManager, "newTaskTag")
+    }
+
+    override fun completeTaskItem(taskItem: TaskItem) {
+        taskViewModel.setCompleted(taskItem)
+    }
+
+
 }
