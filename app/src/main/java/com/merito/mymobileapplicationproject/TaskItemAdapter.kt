@@ -8,12 +8,11 @@ import com.merito.mymobileapplicationproject.databinding.TaskiItemCellBinding
 class TaskItemAdapter(
     private val taskItems: List<TaskItem>,
     private val clickListener: TaskItemClickListener
-): RecyclerView.Adapter<TaskItemViewHolder>()
-{
+) : RecyclerView.Adapter<TaskItemViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskItemViewHolder {
         val from = LayoutInflater.from(parent.context)
         val binding = TaskiItemCellBinding.inflate(from, parent, false)
-        return TaskItemViewHolder(parent.context, binding,clickListener)
+        return TaskItemViewHolder(parent.context, binding, clickListener)
     }
 
     override fun onBindViewHolder(holder: TaskItemViewHolder, position: Int) {

@@ -6,15 +6,13 @@ import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TimePicker
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.merito.mymobileapplicationproject.databinding.FragmentNewTaskSheetBinding
 import java.time.LocalTime
-import java.util.concurrent.locks.Lock
 
 
-class NewTaskSheet(var taskItem: TaskItem?): BottomSheetDialogFragment() {
+class NewTaskSheet(var taskItem: TaskItem?) : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentNewTaskSheetBinding
     private lateinit var taskViewModel: TaskViewModel
     private var dueTime: LocalTime? = null
@@ -23,19 +21,16 @@ class NewTaskSheet(var taskItem: TaskItem?): BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         val activity = requireActivity()
 
-        if (taskItem != null)
-        {
+        if (taskItem != null) {
             binding.taskTitle.text = "Edit Task"
             val editable = Editable.Factory.getInstance()
             binding.name.text = editable.newEditable(taskItem!!.name)
             binding.desc.text = editable.newEditable(taskItem!!.desc)
-            if(taskItem!!.dueTime != null){
-                dueTime = taskItem!!.dueTime!!
+            if (taskItem!!.dueTime() != null) {
+                dueTime = taskItem!!.dueTime()!!
                 updateTimeButtonText()
             }
-        }
-        else
-        {
+        } else {
             binding.taskTitle.text = "Edit Task"
         }
 
@@ -49,9 +44,9 @@ class NewTaskSheet(var taskItem: TaskItem?): BottomSheetDialogFragment() {
     }
 
     private fun openTimePicker() {
-        if(dueTime == null)
+        if (dueTime == null)
             dueTime = LocalTime.now()
-        val listener = TimePickerDialog.OnTimeSetListener{ _, selectedHour, selectedMinute ->
+        val listener = TimePickerDialog.OnTimeSetListener { _, selectedHour, selectedMinute ->
             dueTime = LocalTime.of(selectedHour, selectedMinute)
             updateTimeButtonText()
         }
@@ -61,7 +56,7 @@ class NewTaskSheet(var taskItem: TaskItem?): BottomSheetDialogFragment() {
     }
 
     private fun updateTimeButtonText() {
-        binding.timePickerButton.text = String.format("%02d:%02d",dueTime!!.hour,dueTime!!.minute)
+        binding.timePickerButton.text = String.format("%02d:%02d", dueTime!!.hour, dueTime!!.minute)
     }
 
     override fun onCreateView(
@@ -76,14 +71,15 @@ class NewTaskSheet(var taskItem: TaskItem?): BottomSheetDialogFragment() {
     private fun saveAction() {
         val name = binding.name.text.toString()
         val desc = binding.desc.text.toString()
-        if(taskItem == null)
-        {
-            val newTask = TaskItem(name, desc,dueTime,null)
+        val dueTimeString = if (dueTime == null) null else TaskItem.timeFormatter.format(dueTime)
+        if (taskItem == null) {
+            val newTask = TaskItem(name, desc, dueTimeString, null)
             taskViewModel.addTaskItem(newTask)
-        }
-        else
-        {
-            taskViewModel.updateTaskItem(taskItem!!.id, name, desc, dueTime)
+        } else {
+            taskItem!!.name = name
+            taskItem!!.desc = desc
+            taskItem!!.dueTimeString = dueTimeString
+            taskViewModel.updateTaskItem(taskItem!!)
         }
         binding.name.setText("")
         binding.desc.setText("")

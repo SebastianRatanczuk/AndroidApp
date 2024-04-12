@@ -11,14 +11,12 @@ class TaskItemViewHolder(
     private val binding: TaskiItemCellBinding,
     private val clickListener: TaskItemClickListener
 
-): RecyclerView.ViewHolder(binding.root)
-{
+) : RecyclerView.ViewHolder(binding.root) {
     val timeFormat = DateTimeFormatter.ofPattern("HH:mm")
-    fun bindTaskItem(taskItem: TaskItem)
-    {
+    fun bindTaskItem(taskItem: TaskItem) {
         binding.name.text = taskItem.name
 
-        if(taskItem.isCompleted()){
+        if (taskItem.isCompleted()) {
             binding.name.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
             binding.dueTime.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
 
@@ -27,16 +25,16 @@ class TaskItemViewHolder(
         binding.completeButton.setImageResource(taskItem.imageResource())
         binding.completeButton.setColorFilter(taskItem.imageColor(contex))
 
-        binding.completeButton.setOnClickListener{
+        binding.completeButton.setOnClickListener {
             clickListener.completeTaskItem(taskItem)
         }
 
-        binding.taskCellContainer.setOnClickListener{
+        binding.taskCellContainer.setOnClickListener {
             clickListener.editTaskItem(taskItem)
         }
 
-        if(taskItem.dueTime != null)
-            binding.dueTime.text = timeFormat.format(taskItem.dueTime)
+        if (taskItem.dueTime() != null)
+            binding.dueTime.text = timeFormat.format(taskItem.dueTime())
         else
             binding.dueTime.text = ""
     }
