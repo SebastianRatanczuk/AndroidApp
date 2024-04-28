@@ -24,11 +24,8 @@ class TaskItem(
     else LocalTime.parse(dueTimeString, timeFormatter)
 
     fun isCompleted() = completedDate() != null
-    fun imageResource(): Int = if (isCompleted()) R.drawable.checked_24 else R.drawable.unchecked_24
-    fun imageColor(context: Context): Int = if (isCompleted()) purple(context) else black(context)
 
-    private fun purple(context: Context) = ContextCompat.getColor(context, R.color.purple_500)
-    private fun black(context: Context) = ContextCompat.getColor(context, R.color.black)
+    fun imageResource(): Int = if (isCompleted()) R.drawable.checked_24 else R.drawable.unchecked_24
 
     companion object {
         val timeFormatter: DateTimeFormatter = DateTimeFormatter.ISO_TIME
