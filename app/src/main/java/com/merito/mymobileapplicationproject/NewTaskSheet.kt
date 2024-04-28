@@ -31,7 +31,7 @@ class NewTaskSheet(var taskItem: TaskItem?) : BottomSheetDialogFragment() {
                 updateTimeButtonText()
             }
         } else {
-            binding.taskTitle.text = "Edit Task"
+            binding.taskTitle.text = "New Task"
         }
 
         taskViewModel = ViewModelProvider(activity).get(TaskViewModel::class.java)

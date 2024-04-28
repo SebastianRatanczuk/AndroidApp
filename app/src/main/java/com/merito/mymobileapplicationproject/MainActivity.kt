@@ -21,7 +21,6 @@ class MainActivity : AppCompatActivity(), TaskItemClickListener {
             NewTaskSheet(null).show(supportFragmentManager, "newTaskTag")
         }
         setRecyclerView()
-
     }
 
     private fun setRecyclerView() {
@@ -42,5 +41,8 @@ class MainActivity : AppCompatActivity(), TaskItemClickListener {
         taskViewModel.setCompleted(taskItem)
     }
 
+    override fun deleteTaskItem(taskItem: TaskItem) {
+        taskViewModel.deleteTaskItem(taskItem)
+    }
 
 }
